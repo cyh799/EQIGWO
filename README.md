@@ -68,7 +68,7 @@ for i,(train_index,test_index) in enumerate(kfold.split(feat)):
 # Initialize KNN classifier with a specified number of neighbors (e.g., k)
   knn = KNeighborsClassifier(n_neighbors=k)
   knn.fit(x_train, y_train)
-  pred = mdl.predict(x_valid)
+  pred = knn.predict(x_valid)
   accuracy = accuracy_score(y_valid, y_pred)
   Acc = np.sum(y_valid == y_pred)  / num_valid
 ```
