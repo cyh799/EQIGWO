@@ -1,4 +1,4 @@
-def jfs2(xtrain, ytrain, opts, X):
+def EQIGWO(xtrain, ytrain, opts, X):
     h=0
     ub = 1
     lb = 0
