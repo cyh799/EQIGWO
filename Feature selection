@@ -1,22 +1,5 @@
 def EQIGWO(xtrain, ytrain, opts, X):
-    h=0
-    ub = 1
-    lb = 0
-    N = 5
-    max_iter = 30
-    pbest = copy.deepcopy(X)
-    dim = np.size(xtrain, 1)
-    if np.size(lb) == 1:
-        ub = ub * np.ones([1, dim], dtype='float')
-        lb = lb * np.ones([1, dim], dtype='float')
-    Xbin = binary_conversion4(X, thres, N, dim)
-    fit = np.zeros([N, 1], dtype='float')
-    Xalpha = np.zeros([1, dim], dtype='float')
-    Xbeta = np.zeros([1, dim], dtype='float')
-    Xdelta = np.zeros([1, dim], dtype='float')
-    Falpha = float('inf')
-    Fbeta = float('inf')
-    Fdelta = float('inf')
+
     for i in range(N):
         fit[i, 0] = Fun(xtrain, ytrain, Xbin[i, :], opts)
         if fit[i, 0] < Falpha:
@@ -60,24 +43,7 @@ def EQIGWO(xtrain, ytrain, opts, X):
                 X2 = Xbeta[0, d] - A2 * Dbeta
                 X3 =  Xdelta[0, d] - A3 * Ddelta
                 X[i, d] = (X1 + X2 + X3) / 3
-          Xbin = binary_conversion(X, thres, N, dim)
-          for i in range(N):
-              fit[i, 0] = Fun(xtrain, ytrain, Xbin[i, :])
-              if fit[i, 0] < fit_pre[i, 0]:
-                  fit_pre[i, 0] = fit[i, 0]
-                  pbest[i] = X[i]
-              if fit[i, 0] < Falpha:
-                  Xalpha[0, :] = X[i, :]
-                  Falpha = fit[i, 0]
-                  h = i
-              if fit[i, 0] < Fbeta and fit[i, 0] > Falpha:
-                  Xbeta[0, :] = X[i, :]
-                  Fbeta = fit[i, 0]
-                  p = i
-              if fit[i, 0] < Fdelta and fit[i, 0] > Fbeta and fit[i, 0] > Falpha:
-                  Xdelta[0, :] = X[i, :]
-                  Fdelta = fit[i, 0]
-                  u = i
+         
           k = random.randint(0, N-1)
           m = random.randint(0, N-1)
           while (k == m or k == h or m == h):
@@ -88,13 +54,10 @@ def EQIGWO(xtrain, ytrain, opts, X):
           for i in range(dim):
               Xk[i] = random.random()
               Xm[i] = random.random()
-          bxk = binary_conversion2(np.expand_dims(Xk,axis=0), thres, N, dim)
-          bxm = binary_conversion2(np.expand_dims(Xm,axis=0), thres, N, dim)
           fk = Fun(xtrain, ytrain,bxk, opts)
           fm = Fun(xtrain, ytrain, bxm, opts)
           Xalpha2 = np.expand_dims(two(X[k], X[m], X[h], dim, fk, fm, fit[h, 0]), axis=0)
-          bin = binary_conversion2(Xalpha2, thres, N, dim)
-          fit2 = Fun(xtrain, ytrain, bin, opts)
+          fit2 = Fun(xtrain, ytrain, Xalpha2, opts)
           if fit2< Falpha:
               N = N+1
               X = np.insert(X,0,Xalpha2,axis=0)
